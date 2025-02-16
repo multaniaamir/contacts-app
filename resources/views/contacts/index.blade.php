@@ -27,7 +27,7 @@
     <div class="card">
         <div class="card-body">
             <div class="table-responsive">
-                <table class="table table-bordered table-hover">
+                <table id="contacts-table" class="table table-bordered table-hover">
                     <thead class="table-light">
                         <tr>
                             <th>No</th>
@@ -38,12 +38,9 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @php
-                            $rowNum = ($contacts->total() - ($contacts->currentPage() - 1) * $contacts->perPage());
-                        @endphp
                         @foreach ($contacts as $contact)
                         <tr>
-                            <td>{{ $rowNum-- }}</td>
+                            <td>{{ $contact->id }}</td>
                             <td>{{ $contact->name }}</td>
                             <td>{{ $contact->lastname }}</td>
                             <td>{{ $contact->phone }}</td>
@@ -67,11 +64,45 @@
                     </tbody>
                 </table>
             </div>
-            
-            <div class="d-flex justify-content-center mt-4">
-                {{ $contacts->links('pagination.bootstrap-5') }}
-            </div>
         </div>
     </div>
 </div>
+
+@push('styles')
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css">
+@endpush
+
+@push('scripts')
+<script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap5.min.js"></script>
+<script>
+    $(document).ready(function() {
+    $('#contacts-table').DataTable({
+        "order": [[0, "desc"]], // Sort by the first column (No) in descending order
+        "paging": true, // Enable pagination
+        "pageLength": 10, // Set default number of entries per page
+        "lengthMenu": [ [10, 25, 50, 100], [10, 25, 50, 100] ], // Dropdown for entries per page
+        "language": {
+            "search": "Search contacts:",
+            "zeroRecords": "No matching contacts found",
+            "info": "Showing _START_ to _END_ of _TOTAL_ contacts",
+            "infoEmpty": "Showing 0 to 0 of 0 contacts",
+            "infoFiltered": "(filtered from _MAX_ total contacts)",
+            "lengthMenu": "Show _MENU_ contacts per page",
+            "paginate": {
+                "first": "First",
+                "last": "Last",
+                "next": "Next",
+                "previous": "Previous"
+            }
+        },
+        "columnDefs": [
+            { "orderable": false, "targets": 4 } // Disable sorting on the action column
+        ]
+    });
+});
+
+    </script>
+    
+@endpush
 @endsection
