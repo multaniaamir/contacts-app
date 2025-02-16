@@ -5,13 +5,12 @@ namespace App\Http\Controllers;
 use App\Models\Contact;
 use Illuminate\Http\Request;
 use SimpleXMLElement;
-use Illuminate\Validation\Rule;
 
 class ContactController extends Controller
 {
     public function index()
     {
-        $contacts = Contact::orderBy('created_at', 'desc')->paginate(10);
+        $contacts = Contact::orderBy('created_at', 'desc')->get();
         return view('contacts.index', compact('contacts'));
     }
 
